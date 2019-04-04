@@ -69,15 +69,17 @@ class(perm.model)
 plot(TukeyHSD(perm.model))
 
 
-# Rank-Sum test
+# Kruskal-Wallis test
 (kw.test <- kruskal.test(Lifetime ~ Diet, data = case0501))
 class(kw.test)
 
 
-# Nonparametric test
+# Unfortunately, there are no built-in post hoc tests to follow up the Kruskal-Wallis test.
+# So do pairwise tests using a Bonferonni adjustment: for an experiment-wise alpha = 0.05 and 15 possible comparisons,
+# do the pairwise tests with alpha = 0.05/15 = 0.0033.
 
 
-# Compare all 15 to find effective vs ineffective diets
+# Compare all 15 to find effective vs ineffective diets.
 attach(case0501)
 wilcox.test(Lifetime[Diet == "N/R40"], Lifetime[Diet == "N/N85"], alternative="two.sided", conf.level=0.9967)
 wilcox.test(Lifetime[Diet == "N/R50"], Lifetime[Diet == "N/N85"], alternative="two.sided", conf.level=0.9967)
@@ -95,3 +97,5 @@ wilcox.test(Lifetime[Diet == "R/R50"], Lifetime[Diet == "NP"], alternative="two.
 wilcox.test(Lifetime[Diet == "lopro"], Lifetime[Diet == "NP"], alternative="two.sided", conf.level=0.9967)
 wilcox.test(Lifetime[Diet == "lopro"], Lifetime[Diet == "R/R50"], alternative="two.sided", conf.level=0.9967)
 detach(case0501)
+
+# The non-parametric tests confirm the result of the standard ANOVA
